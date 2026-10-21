@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>FitnessWorld — Log in</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/auth.css">
+</head>
+<body>
+<main class="auth-page">
+  <div class="card form-card auth-card">
+    <a class="brand" href="/login"><span class="brand-mark">FW</span><span>FitnessWorld</span></a>
+    <h1>Welcome Back</h1>
+    <form data-auth="login" data-api="/api/auth/login" novalidate>
+      <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+      <label>Password<span class="pw-wrap"><input name="password" type="password" autocomplete="current-password" required><button class="pw-toggle" type="button" aria-pressed="false">Show</button></span></label>
+      <div class="auth-link"><a href="/forgot-password">Forgot Password?</a></div>
+      <div id="msg" class="notice" role="alert" hidden></div>
+      <button class="btn btn-primary btn-full" type="submit">Login</button>
+    </form>
+    <p class="auth-foot">Don't have an account? <a href="/register">Sign up</a></p>
+  </div>
+</main>
+<script src="/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>FitnessWorld — Create account</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/auth.css">
+</head>
+<body>
+<main class="auth-page">
+  <div class="card form-card auth-card">
+    <a class="brand" href="/login"><span class="brand-mark">FW</span><span>FitnessWorld</span></a>
+    <h1>Create Account</h1>
+    <form data-auth="register" data-api="/api/auth/register" novalidate>
+      <label>Full name<input name="name" type="text" autocomplete="name" maxlength="60" required></label>
+      <label>Your fitness goal<select name="goal" required><option value="">Select your goal</option><option value="lose">Lose fat</option><option value="build">Build muscle</option><option value="fit">Stay fit</option><option value="endure">Improve endurance</option></select></label>
+      <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+      <label>Password<span class="pw-wrap"><input name="password" type="password" autocomplete="new-password" required><button class="pw-toggle" type="button" aria-pressed="false">Show</button></span></label>
+      <label>Confirm password<span class="pw-wrap"><input name="confirmPassword" type="password" autocomplete="new-password" required><button class="pw-toggle" type="button" aria-pressed="false">Show</button></span></label>
+      <div id="msg" class="notice" role="alert" hidden></div>
+      <button class="btn btn-primary btn-full" type="submit">Create Account</button>
+    </form>
+    <p class="auth-foot">Already have an account? <a href="/login">Log in</a></p>
+  </div>
+</main>
+<script src="/auth.js"></script>
+</body>
+</html>

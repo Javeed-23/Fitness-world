@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>FitnessWorld — Train. Track. Compete.</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" data-page="dashboard"><span class="brand-mark">FW</span><span>FitnessWorld</span></a>
+    <div class="side-label">YOUR SPACE</div>
+    <nav id="mainNav" class="nav-list">
+      <button class="nav-item active" data-page="dashboard"><span>⌂</span> My Profile</button>
+      <button class="nav-item" data-page="progress"><span>↗</span> My Progress</button>
+      <button class="nav-item" data-page="training"><span>▤</span> Workout</button>
+      <button class="nav-item" data-page="gym"><span>⌂</span> Gym</button>
+      <button class="nav-item" data-page="arena"><span>♜</span> Gym Arena</button>
+      <button class="nav-item" data-page="social"><span>◎</span> Social Feed</button>
+      <button class="nav-item" data-page="settings"><span>⚙</span> Security & Settings</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="mini-profile"><div class="avatar">JS</div><div><strong id="sideName">Fitness Member</strong><small>Member account</small></div></div>
+      <button class="btn btn-quiet btn-full" id="exportData">Export my data</button>
+      <button class="btn btn-quiet btn-full" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-only" id="menuToggle" aria-label="Open navigation">☰</button>
+      <div class="crumb"><span>FitnessWorld</span><span class="muted">/</span><strong id="pageHeading">My Profile</strong></div>
+      <div class="top-actions"><span class="demo-pill" id="syncPill" data-state="saving">Connecting…</span><button class="icon-btn" data-page="settings" aria-label="Settings">⚙</button></div>
+    </header>
+    <div class="page-wrap">
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-row"><div><p class="eyebrow">YOUR FITNESS SPACE</p><h1>Build consistency. Earn progress.</h1><p class="subtext">Your training, recovery, and competition activity in one place.</p></div><button class="btn btn-primary" data-page="training">Continue training <span>→</span></button></div>
+        <div class="profile-banner card">
+          <div class="avatar avatar-lg" id="profileInitials">JS</div>
+          <div class="profile-main"><h2 id="profileName">Fitness Member</h2><p class="muted">FitnessWorld member · <span id="rankText">Bronze</span> rank</p><div class="profile-tags"><span>Member Points: <b id="memberPoints">0</b></span><span>Gym Points: <b id="gymPoints">0</b></span></div></div>
+          <button class="btn btn-secondary" data-page="settings">Edit profile</button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card card"><span class="stat-label">Current streak</span><strong id="streakStat">0 days</strong><small>Consistency starts today</small></article>
+          <article class="stat-card card"><span class="stat-label">Workouts completed</span><strong id="workoutStat">0</strong><small>Logged workouts</small></article>
+          <article class="stat-card card"><span class="stat-label">Challenges joined</span><strong id="challengeStat">0</strong><small>Gym Arena</small></article>
+          <article class="stat-card card"><span class="stat-label">Current rank</span><strong id="rankStat">Bronze</strong><small id="rankProgress">0 / 500 points to Silver</small></article>
+        </div>
+        <div class="section-heading"><div><p class="eyebrow">OVERVIEW</p><h2>Your next steps</h2></div></div>
+        <div class="feature-grid">
+          <button class="feature-card card" data-page="training"><span class="feature-icon">▤</span><strong>Workout</strong><span>Today’s session, exercise videos and recovery check-ins.</span><em>Open section →</em></button>
+          <button class="feature-card card" data-page="progress"><span class="feature-icon">↗</span><strong>My Progress</strong><span>Review training history and measurements.</span><em>Open section →</em></button>
+          <button class="feature-card card" data-page="arena"><span class="feature-icon">♜</span><strong>Gym Arena</strong><span>Explore challenges and verified results.</span><em>Open section →</em></button>
+          <button class="feature-card card" data-page="gym"><span class="feature-icon">⌂</span><strong>My Gym</strong><span>Join a gym community or create a request.</span><em>Open section →</em></button>
+        </div>
+        <div class="section-heading"><div><p class="eyebrow">ACTIVITY</p><h2>Recent activity</h2></div></div>
+        <div class="card empty-state" id="recentActivity"><div class="empty-symbol">↗</div><strong>Your activity will appear here</strong><p>Complete a workout or join a challenge to start building your history.</p></div>
+      </section>
+
+      <section class="page" id="page-progress">
+        <div class="page-intro"><p class="eyebrow">MEASURE WHAT MATTERS</p><h1>My Progress</h1><p class="subtext">Record measurements and review consistency. Fitness estimates are informational, not medical advice.</p></div>
+        <div class="two-col">
+          <form class="card form-card" id="measurementForm"><h2>Log a measurement</h2><label>Date<input name="date" type="date" required></label><div class="form-grid"><label>Weight (kg)<input name="weight" type="number" min="1" max="500" step="0.1" placeholder="e.g. 53"></label><label>Waist (cm)<input name="waist" type="number" min="1" max="300" step="0.1" placeholder="Optional"></label></div><label>Notes<textarea name="notes" rows="2" placeholder="How are you feeling?"></textarea></label><button class="btn btn-primary" type="submit">Save measurement</button></form>
+          <div class="card form-card"><h2>Training consistency</h2><div class="big-number" id="progressWorkouts">0</div><p class="muted">workouts completed</p><div class="progress-track"><div id="consistencyBar" class="progress-fill" style="width:0%"></div></div><p class="small muted">This visual is based on your logged workouts, not a medical or performance assessment.</p></div>
+        </div>
+        <div class="section-heading"><h2>Measurement history</h2><button class="btn btn-secondary" id="clearMeasurements">Clear history</button></div>
+        <div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Weight</th><th>Waist</th><th>Notes</th></tr></thead><tbody id="measurementRows"><tr><td colspan="4" class="muted">No measurements recorded yet.</td></tr></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-training">
+        <div class="page-intro"><p class="eyebrow">YOUR DAILY PLAN</p><h1>Workout</h1><p class="subtext">Follow today’s session, watch every exercise in 360°, and check in on recovery.</p></div>
+        <div class="tabs" role="tablist"><button class="tab active" data-tab="workoutPanel">Workout</button></div>
+        <div class="tab-panel active" id="workoutPanel">
+          <div class="two-col">
+            <form class="card form-card" id="workoutForm"><h2>Log a workout</h2><label>Workout name<input name="name" required placeholder="e.g. Upper body"></label><div class="form-grid"><label>Duration (minutes)<input name="duration" type="number" min="1" max="600" value="45" required></label><label>Difficulty<select name="difficulty"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></label></div><label>Exercises / notes<textarea name="notes" rows="3" placeholder="Sets, reps, exercises…"></textarea></label><button class="btn btn-primary" type="submit">Mark workout complete</button></form>
+            <div class="card form-card"><h2>Exercise library</h2><label>Search exercises<input id="exerciseSearch" placeholder="Search by name or muscle"></label><div class="exercise-list" id="exerciseList"></div></div>
+          </div>
+          <div class="section-heading"><h2>Workout history</h2></div><div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Workout</th><th>Duration</th><th>Difficulty</th></tr></thead><tbody id="workoutRows"><tr><td colspan="4" class="muted">No workouts logged yet.</td></tr></tbody></table></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-gym">
+        <div class="page-intro"><p class="eyebrow">GYM COMMUNITY & MARKETPLACE</p><h1>Gym</h1><p class="subtext">Manage your gym group, subscriptions, challenges, and marketplace in one place.</p></div>
+
+        <div class="gym-hub-banner card">
+          <div><p class="eyebrow">FITNESSWORLD GYM HUB</p><h2>Build your gym community. Grow your business.</h2><p class="muted">Create a group, choose a plan, and explore products and services offered by participating gyms.</p></div>
+          <div class="gym-hub-price"><span>Group creation</span><strong>₹50</strong><small>One-time fee per group</small></div>
+        </div>
+
+        <div class="tabs gym-hub-tabs" role="tablist" aria-label="Gym options">
+          <button class="tab active" data-gymtab="gymHomePanel">Overview</button>
+          <button class="tab" data-gymtab="gymGroupsPanel">Join / Create Group</button>
+          <button class="tab" data-gymtab="gymMarketplacePanel">Marketplace</button>
+          <button class="tab" data-gymtab="gymSellPanel">Sell an Item</button>
+          <button class="tab" data-gymtab="gymShopPanel">My Shop & Orders</button>
+          <button class="tab" data-gymtab="gymPlansPanel">Plans & Platform Fees</button>
+        </div>
+
+        <div class="gym-tab-panel active" id="gymHomePanel">
+          <div class="stats-grid">
+            <article class="stat-card card"><span class="stat-label">Group creation fee</span><strong>₹50</strong><small>One-time per group</small></article>
+            <article class="stat-card card"><span class="stat-label">Beginner plan</span><strong>₹199</strong><small>Per month</small></article>
+            <article class="stat-card card"><span class="stat-label">Pro plan</span><strong>₹499</strong><small>Per month</small></article>
+            <article class="stat-card card"><span class="stat-label">Pro seller platform fee</span><strong>1%</strong><small>Eligible completed sales</small></article>
+          </div>
+          <div class="feature-grid gym-feature-grid">
+            <button class="feature-card card" data-gymjump="gymGroupsPanel"><span class="feature-icon">＋</span><strong>Join or create a group</strong><span>Create a gym group for ₹50 or request to join using an invite code.</span><em>Open groups →</em></button>
+            <button class="feature-card card" data-gymjump="gymMarketplacePanel"><span class="feature-icon">▦</span><strong>Marketplace</strong><span>Browse gym merchandise, coaching, digital plans and gym passes.</span><em>Explore marketplace →</em></button>
+            <button class="feature-card card" data-gymjump="gymSellPanel"><span class="feature-icon">↗</span><strong>Sell with your gym</strong><span>Create product or service listings for other groups to discover.</span><em>Create listing →</em></button>
+            <button class="feature-card card" data-gymjump="gymPlansPanel"><span class="feature-icon">◇</span><strong>Plans & platform fees</strong><span>Compare Beginner and Pro benefits and see example platform fees.</span><em>View plans →</em></button>
+          </div>
+          <div class="notice"><strong>Phase 1:</strong> Local and District challenges are available as non-cash competitions. State, National and International levels remain visible but locked. Real subscriptions, marketplace payments and settlements are not connected in this prototype.</div>
+        </div>
+
+        <div class="gym-tab-panel" id="gymGroupsPanel">
+          <div class="two-col">
+            <form class="card form-card" id="joinGymForm"><h2>Join a gym group</h2><label>Invite code<input name="code" placeholder="Enter gym invite code" required></label><button class="btn btn-primary" type="submit">Request to join</button><p class="small muted">Demo requests are stored locally and are not sent to a gym.</p></form>
+            <form class="card form-card" id="gymForm"><h2>Create / submit a gym group</h2><p class="muted small">Group creation fee: <strong>₹50 one-time</strong>. This prototype simulates the request and does not collect payment.</p><label>Gym / group name<input name="name" required></label><label>City / district<input name="location" required></label><label>Manager contact email<input name="email" type="email" required></label><label>Verification documents description<input name="docs" type="text" placeholder="Describe available documents" required></label><button class="btn btn-primary" type="submit">Save demo group request</button><p class="small muted">Actual document upload, payment and verification need a backend.</p></form>
+          </div>
+          <div class="section-heading"><h2>My gym requests</h2></div><div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Type</th><th>Details</th><th>Status</th></tr></thead><tbody id="gymRows"><tr><td colspan="3" class="muted">No requests submitted.</td></tr></tbody></table></div></div>
+        </div>
+
+        <div class="gym-tab-panel" id="gymMarketplacePanel">
+          <div class="section-heading"><div><h2>FitnessWorld Marketplace</h2><p class="muted">Shop products and services from participating gyms.</p></div><button class="btn btn-primary" data-gymjump="gymSellPanel">+ Sell with your gym</button></div>
+          <div class="gym-market-hero card"><div><p class="eyebrow">DISCOVER · BUY · SELL</p><h2>Good fitness. Good business.</h2><p class="muted">Explore gym merchandise, fitness coaching, digital workout plans, equipment and gym passes.</p></div><div class="gym-market-highlight"><span>Gym Pro platform fee</span><strong>1%</strong><small>On eligible completed sales</small></div></div>
+          <div class="gym-market-filters">
+            <button class="filter-btn active" data-market-filter="All">All items</button><button class="filter-btn" data-market-filter="Products">Products</button><button class="filter-btn" data-market-filter="Coaching">Coaching</button><button class="filter-btn" data-market-filter="Digital">Digital plans</button><button class="filter-btn" data-market-filter="Gym passes">Gym passes</button>
+          </div>
+          <div class="gym-market-search"><input id="gymMarketSearch" placeholder="Search products, coaching, gym passes…" aria-label="Search marketplace"><button class="btn btn-secondary" id="gymMarketClear">Clear</button></div>
+          <div class="gym-market-grid" id="gymMarketGrid"></div>
+          <div class="notice">Marketplace listings and orders are demo-only. No real payments, shipping or service bookings are processed.</div>
+        </div>
+
+        <div class="gym-tab-panel" id="gymSellPanel">
+          <div class="page-intro compact-intro"><h2>Sell a product or service</h2><p class="subtext">Gym Pro sellers can list merchandise, equipment, coaching, digital products and gym passes. Beginner sellers can browse and sell under their plan's applicable platform fee.</p></div>
+          <form class="card form-card" id="gymMarketListingForm">
+            <div class="form-grid">
+              <label>Listing title *<input name="title" required maxlength="70" placeholder="e.g. Custom gym T-shirt"></label>
+              <label>Category *<select name="category" required><option value="Products">Physical product</option><option value="Coaching">Fitness coaching / service</option><option value="Digital">Digital fitness product</option><option value="Gym passes">Gym membership / pass</option></select></label>
+              <label>Price (₹) *<input name="price" type="number" min="1" max="1000000" required placeholder="499"></label>
+              <label>Listing icon<select name="emoji"><option>🏋️</option><option>👕</option><option>🥤</option><option>🧘</option><option>🎓</option><option>📋</option><option>🏢</option><option>🎒</option><option>💪</option></select></label>
+              <label class="full-span">Description *<textarea name="description" required maxlength="400" rows="3" placeholder="Describe the product, size, availability or service terms."></textarea></label>
+              <label>Gym / seller name *<input name="seller" required maxlength="70" placeholder="Your gym name"></label>
+              <label>Availability<select name="availability"><option>In stock / available</option><option>Limited availability</option><option>Made to order</option><option>Booking required</option></select></label>
+            </div>
+            <div class="notice">This saves a local demo listing only. A production marketplace needs seller verification, listing review, order fulfilment, returns/refunds and secure payment integration.</div>
+            <button class="btn btn-primary" type="submit">Save demo listing</button>
+          </form>
+        </div>
+
+        <div class="gym-tab-panel" id="gymShopPanel">
+          <div class="stats-grid">
+            <article class="stat-card card"><span class="stat-label">My listings</span><strong id="gymMyListingCount">0</strong><small>Local demo listings</small></article>
+            <article class="stat-card card"><span class="stat-label">Demo orders</span><strong id="gymMyOrderCount">0</strong><small>No real payments</small></article>
+            <article class="stat-card card"><span class="stat-label">Estimated platform fee</span><strong id="gymMyPlatformFee">₹0</strong><small>Illustrative only</small></article>
+            <article class="stat-card card"><span class="stat-label">Seller plan rate</span><strong id="gymMyPlanRate">1%</strong><small>Change plan to preview</small></article>
+          </div>
+          <div class="section-heading"><h2>Your listings</h2><button class="btn btn-secondary" data-gymjump="gymSellPanel">+ New listing</button></div><div id="gymMyListings"></div>
+          <div class="section-heading"><h2>Demo order history</h2></div><div id="gymMyOrders"></div>
+        </div>
+
+        <div class="gym-tab-panel" id="gymPlansPanel">
+          <div class="gym-plan-grid">
+            <article class="card gym-plan-card"><p class="eyebrow">FOR STARTING GYMS</p><h2>Gym Beginner</h2><div class="gym-plan-price">₹199 <small>/ month</small></div><p class="muted">A straightforward plan for a growing gym community.</p><ul><li>Create/manage gym group</li><li>4 free challenge credits per billing month</li><li>2 credits in days 1–15</li><li>2 credits in days 16–end of month</li><li>Basic member activity and leaderboard</li><li>Marketplace selling platform fee: <strong>5%</strong></li></ul><button class="btn btn-secondary btn-full" data-plan-choice="Beginner">Select Gym Beginner (demo)</button></article>
+            <article class="card gym-plan-card featured-plan"><p class="eyebrow">ADVANCED GYM TOOLS</p><h2>Gym Pro</h2><div class="gym-plan-price">₹499 <small>/ month</small></div><p class="muted">Advanced tools and a lower platform fee for sellers.</p><ul><li>Everything in Beginner</li><li>10 free challenge credits per billing month</li><li>5 credits in days 1–15</li><li>5 credits in days 16–end of month</li><li>Manage multiple groups (limits to be configured)</li><li>Advanced analytics and member progress reports</li><li>Custom gym branding and banners</li><li>Priority support</li><li>Marketplace selling platform fee: <strong>1%</strong></li></ul><button class="btn btn-primary btn-full" data-plan-choice="Pro">Select Gym Pro (demo)</button></article>
+          </div>
+          <div class="card form-card gym-trial-card"><h2>New group offer</h2><p>Create a group for a one-time ₹50 fee. Each eligible new group receives a <strong>7-day Gym Pro trial</strong>. Trial challenge credits: up to 2 during the trial, as a proposed demo rule. No automatic subscription charge without explicit authorization.</p><p class="small muted">Challenge credits apply to Local and District non-cash challenges in Phase 1. Locked levels cannot be created or entered.</p></div>
+          <div class="card form-card"><h2>Platform fee calculator</h2><p class="muted small">The platform fee is the amount FitnessWorld retains from an eligible completed sale. This is shown as a platform fee in the interface.</p><div class="form-grid"><label>Sale amount (₹)<input id="gymFeeSaleAmount" type="number" min="1" max="10000000" value="1000"></label><label>Seller subscription<select id="gymFeePlan"><option value="1">Gym Pro — 1% platform fee</option><option value="5">Gym Beginner — 5% platform fee</option></select></label></div><div class="gym-fee-results"><div><span>FitnessWorld platform fee</span><strong id="gymFeeAmount">₹10</strong></div><div><span>Seller amount before other costs</span><strong id="gymSellerAmount">₹990</strong></div></div><p class="small muted">Illustrative only. Payment-processing fees, refunds, shipping, taxes and other expenses are not included.</p></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-arena">
+        <div class="page-intro"><p class="eyebrow">COMPETE WITH TRANSPARENCY</p><h1>Gym Arena</h1><p class="subtext">Challenges, verified performances, winner points, and prize status.</p></div>
+        <div class="arena-toolbar"><div class="filter-wrap"><label class="search-label">Search challenges<input id="challengeSearch" placeholder="Name, level, or category"></label><label>Level<select id="levelFilter"><option value="All">All levels</option><option>Local</option><option>District</option><option>State</option><option>National</option><option>International</option></select></label></div><button class="btn btn-primary" id="createChallengeBtn">+ Create challenge</button></div>
+        <div class="notice"><strong>Competition fairness:</strong> published rules should be locked once registration begins. Final winners require verified results. The organizer must arrange offline events and deliver advertised prizes; FitnessWorld's legal obligations must be assessed separately.</div>
+        <div id="challengeCards" class="challenge-grid"></div>
+        <div class="section-heading"><h2>My challenge activity</h2></div><div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Challenge</th><th>Action</th><th>Status</th><th>Score / points</th></tr></thead><tbody id="challengeActivityRows"><tr><td colspan="4" class="muted">No challenge activity yet.</td></tr></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-social">
+        <div class="page-intro"><p class="eyebrow">COMMUNITY</p><h1>Social Feed</h1><p class="subtext">Share training milestones and encourage your community. Keep private health information private.</p></div>
+        <form class="card form-card post-form" id="postForm"><label>Write a post<textarea name="text" rows="3" maxlength="1000" required placeholder="Share a workout milestone or a fitness tip…"></textarea></label><div class="post-form-bottom"><span class="small muted">Be respectful. No medical misinformation or unsafe challenge promotion.</span><button class="btn btn-primary" type="submit">Publish post</button></div></form>
+        <div class="feed" id="feedList"></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="page-intro"><p class="eyebrow">ACCOUNT CONTROL</p><h1>Security & Settings</h1><p class="subtext">Manage your demo profile and preferences. Sign-in is handled by the server; the data below is still stored in this browser only.</p></div>
+        <div class="two-col">
+          <form class="card form-card" id="profileForm"><h2>Profile preferences</h2><label>Display name<input name="name" required maxlength="60"></label><label>Preferred home page<select name="home"><option value="dashboard">My Profile</option><option value="progress">My Progress</option><option value="training">Workout</option><option value="gym">Gym</option><option value="arena">Gym Arena</option><option value="social">Social Feed</option></select></label><div class="form-grid"><label>Units<select name="units"><option>Metric (kg, cm)</option><option>Imperial (lb, in)</option></select></label><label>Language<select name="language"><option>English</option><option>తెలుగు</option><option>हिन्दी</option></select></label></div><button class="btn btn-primary" type="submit">Save preferences</button></form>
+          <div class="card form-card"><h2>Security and privacy</h2><div class="setting-row"><div><strong>Two-step verification</strong><p class="small muted">Requires backend support to enable securely.</p></div><span class="status-chip">Not connected</span></div><div class="setting-row"><div><strong>Notifications</strong><p class="small muted">In-app, email, SMS, WhatsApp, and browser notifications require integrations.</p></div><span class="status-chip">Demo</span></div><div class="setting-row"><div><strong>Privacy</strong><p class="small muted">Fitness records should be private by default in production.</p></div><span class="status-chip">Local demo</span></div><button class="btn btn-secondary btn-full" id="downloadData">Export my data (JSON)</button><button class="btn btn-danger-outline btn-full" id="deleteData">Delete local demo data</button></div>
+        </div>
+        <div class="card form-card disclaimer-card"><h2>Before production launch</h2><p>This app does not yet provide server-side permissions, shared multi-user data, real document verification, payment collection, escrow, automated payouts, or legal compliance. Those require a backend, suitable providers, security testing, and legal review.</p></div>
+      </section>
+    </div>
+    <footer class="footer"><span>FitnessWorld</span><span>Train responsibly · Compete fairly</span></footer>
+  </main>
+</div>
+
+<div class="modal-backdrop hidden" id="challengeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head"><div><p class="eyebrow">GYM ARENA</p><h2 id="modalTitle">Create challenge</h2></div><button class="icon-btn" id="closeChallengeModal" aria-label="Close">×</button></div>
+    <form id="challengeForm">
+      <div class="modal-body">
+        <div class="form-grid"><label>Challenge name<input name="name" required maxlength="100" placeholder="e.g. Push-up endurance"></label><label>Competition level<select name="level" id="challengeLevel" required><option>Local</option><option>District</option><option>State</option><option>National</option><option>International</option></select></label></div>
+        <div class="form-grid"><label>Category<select name="category"><option>Strength</option><option>Calisthenics</option><option>Endurance</option><option>Consistency</option><option>Fitness Test</option><option>Team Challenge</option><option>Custom</option></select></label><label>Performance mode<select name="mode" id="challengeMode"><option value="Offline">Offline / in-person</option><option value="Online">Online / remote video</option></select></label></div>
+        <p id="modeGuidance" class="notice">Offline is the preferred mode for State, National, and International challenges. The organizer chooses one mode per challenge.</p>
+        <div id="offlineFields" class="mode-fields"><h3>Offline event arrangements</h3><div class="form-grid"><label>Venue name<input name="venue" placeholder="Venue / gym name"></label><label>Venue city and address<input name="address" placeholder="Full address"></label></div><label>Judge and staff plan<input name="judges" placeholder="Who will judge and supervise?"></label><label>Safety and emergency plan<textarea name="safety" rows="2" placeholder="Equipment, first aid, emergency arrangements…"></textarea></label><label>Venue / permit documents description<input name="venueDocs" placeholder="List applicable documents; actual upload needs backend"></label></div>
+        <div id="onlineFields" class="mode-fields hidden"><h3>Online evidence rules</h3><div class="form-grid"><label>Evidence type<select name="evidence"><option>Continuous video</option><option>Video + score sheet</option><option>Approved live session</option></select></label><label>Camera angle / identity checks<input name="camera" placeholder="e.g. full body visible, ID check"></label></div><label>Submission and review instructions<textarea name="onlineRules" rows="2" placeholder="Deadline, original video rules, review process…"></textarea></label></div>
+        <div class="form-grid"><label>Start date<input name="start" type="date" required></label><label>End date<input name="end" type="date" required></label></div>
+        <div class="form-grid"><label>Registration fee (₹)<input name="fee" type="number" min="0" step="1" value="0" required></label><label>Prize description<input name="prize" required placeholder="e.g. Trophy, ₹5,000, equipment"></label></div>
+        <div class="form-grid"><label>Prize value (₹, if applicable)<input name="prizeValue" type="number" min="0" step="1" value="0"></label><label>Participant capacity<input name="capacity" type="number" min="2" max="100000" value="50" required></label></div>
+        <div class="form-grid"><label>Member Points for winner<input name="memberPoints" type="number" min="0" max="50" value="5" required></label><label>Gym Points for winning gym<input name="gymPoints" type="number" min="0" max="100" value="10" required></label></div>
+        <label>Eligibility and minimum rank<input name="eligibility" required placeholder="Who can join?"></label>
+        <label>Scoring rules and tie-breaker<textarea name="scoring" rows="3" required placeholder="Explain exactly how scores are measured and ties decided."></textarea></label>
+        <label>Required documents checklist<textarea name="documents" rows="2" required placeholder="Organizer proof, rules, prize funding, and mode-specific documents…"></textarea></label>
+        <label>Organizer contact email<input name="email" type="email" required placeholder="Organizer contact"></label>
+        <div class="notice"><strong>Prize responsibility:</strong> The organizer is responsible for event arrangements and delivering the advertised prize under the published terms. Do not publish a prize you cannot fund. Real payments and legal compliance are not implemented in this demo.</div>
+        <label class="check-label"><input name="funding" type="checkbox" required> I confirm that the prize information is accurate and that I have a credible plan to fund and deliver the advertised prize.</label>
+        <label class="check-label"><input name="responsibility" type="checkbox" required> I accept responsibility for the event arrangements, accurate rules, applicable permissions, safety plan, and prize delivery.</label>
+        <label class="check-label"><input name="review" type="checkbox" required> I understand that required documents and challenge details must be reviewed before publication; this prototype's review is simulated.</label>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn btn-secondary" id="cancelChallenge">Cancel</button><button type="submit" class="btn btn-primary">Submit for review</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><div class="modal"><div class="modal-head"><div><p class="eyebrow">CHALLENGE DETAILS</p><h2 id="detailTitle">Challenge</h2></div><button class="icon-btn" id="closeDetailModal" aria-label="Close">×</button></div><div class="modal-body" id="detailBody"></div><div class="modal-foot" id="detailFoot"></div></div></div>
+<div class="toast hidden" id="toast" role="status"></div>
+<script src="/session.js"></script>
+<script src="app.js"></script>
+<script src="/features.js"></script>
+<script src="/plans.js"></script>
+<script src="/meals.js"></script>
+<script src="/groups.js"></script>
+<script src="/rig.js"></script>
+<script src="/motion.js"></script>
+<script src="/video.js"></script>
+<script src="/today.js"></script>
+<script src="/progress.js"></script>
+</body>
+</html>
