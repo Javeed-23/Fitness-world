@@ -34,7 +34,7 @@ async function account(email) {
 before(async () => {
   server = spawn(process.execPath, ["server.js"], {
     cwd: path.join(__dirname, ".."),
-    env: { ...process.env, PORT: String(PORT), NODE_ENV: "development", DATABASE_FILE: path.join(tmp, "test.sqlite"), SESSION_SECRET: "test-secret-that-is-at-least-32-characters-long" },
+    env: { ...process.env, PORT: String(PORT), NODE_ENV: "development", DATABASE_FILE: path.join(tmp, "test.sqlite"), SESSION_SECRET: "test-secret-that-is-at-least-32-characters-long", SEED_DEMO_DATA: "false" },
     stdio: ["ignore", "pipe", "pipe"]
   });
   let err = "";
@@ -134,4 +134,35 @@ test("logging out ends access to the data", async () => {
   assert.equal((await req("GET", "/api/me/data", { cookie })).status, 200);
   await req("POST", "/api/auth/logout", { cookie, body: {} });
   assert.equal((await req("GET", "/api/me/data", { cookie })).status, 401);
+});
+
+/* Regression: on a host like Render (production, one proxy in front, HTTPS ends at the proxy),
+   login must set the Secure session cookie and the home page must accept it. */
+test("behind a proxy in production, the login cookie is set and accepted", async () => {
+  const port = PORT + 600;
+  const base = `http://127.0.0.1:${port}`;
+  const prod = spawn(process.execPath, ["server.js"], {
+    cwd: path.join(__dirname, ".."),
+    env: { ...process.env, PORT: String(port), NODE_ENV: "production", DATABASE_FILE: path.join(tmp, "prod.sqlite"), SESSION_SECRET: "production-test-secret-that-is-long-enough-123", SEED_DEMO_DATA: "false" },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+  try {
+    for (let i = 0; i < 80; i++) {
+      try { const r = await fetch(base + "/api/health"); if (r.ok) break; } catch { /* not up yet */ }
+      await new Promise(r => setTimeout(r, 100));
+    }
+    const proxied = { "content-type": "application/json", origin: base, "x-forwarded-proto": "https" };
+    const reg = await fetch(base + "/api/auth/register", { method: "POST", headers: proxied, body: JSON.stringify({ name: "Proxy User", email: "proxy@example.com", goal: "build", password: "StrongPass123", confirmPassword: "StrongPass123" }) });
+    assert.equal(reg.status, 201);
+    const setCookie = reg.headers.get("set-cookie") || "";
+    assert.ok(setCookie.startsWith("fw.sid="), "a session cookie is sent: " + setCookie);
+    assert.ok(/;\s*Secure/i.test(setCookie), "the cookie is marked Secure");
+    const cookie = setCookie.split(";")[0];
+    const home = await fetch(base + "/", { headers: { cookie, "x-forwarded-proto": "https" }, redirect: "manual" });
+    assert.equal(home.status, 200, "the home page accepts the session");
+    const anonymous = await fetch(base + "/", { headers: { "x-forwarded-proto": "https" }, redirect: "manual" });
+    assert.equal(anonymous.status, 302, "without a session the home page goes to login");
+  } finally {
+    prod.kill();
+  }
 });

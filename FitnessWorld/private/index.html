@@ -23,7 +23,7 @@
     </nav>
     <div class="sidebar-bottom">
       <div class="mini-profile"><div class="avatar">JS</div><div><strong id="sideName">Fitness Member</strong><small>Member account</small></div></div>
-      <button class="btn btn-quiet btn-full" id="exportData">Export my data</button>
+      <button class="btn btn-quiet btn-full" id="exportData">Export demo data</button>
       <button class="btn btn-quiet btn-full" id="logoutBtn">Log out</button>
     </div>
   </aside>
@@ -43,7 +43,7 @@
         </div>
         <div class="stats-grid">
           <article class="stat-card card"><span class="stat-label">Current streak</span><strong id="streakStat">0 days</strong><small>Consistency starts today</small></article>
-          <article class="stat-card card"><span class="stat-label">Workouts completed</span><strong id="workoutStat">0</strong><small>Logged workouts</small></article>
+          <article class="stat-card card"><span class="stat-label">Workouts completed</span><strong id="workoutStat">0</strong><small>Logged in this demo</small></article>
           <article class="stat-card card"><span class="stat-label">Challenges joined</span><strong id="challengeStat">0</strong><small>Gym Arena</small></article>
           <article class="stat-card card"><span class="stat-label">Current rank</span><strong id="rankStat">Bronze</strong><small id="rankProgress">0 / 500 points to Silver</small></article>
         </div>
@@ -62,7 +62,7 @@
         <div class="page-intro"><p class="eyebrow">MEASURE WHAT MATTERS</p><h1>My Progress</h1><p class="subtext">Record measurements and review consistency. Fitness estimates are informational, not medical advice.</p></div>
         <div class="two-col">
           <form class="card form-card" id="measurementForm"><h2>Log a measurement</h2><label>Date<input name="date" type="date" required></label><div class="form-grid"><label>Weight (kg)<input name="weight" type="number" min="1" max="500" step="0.1" placeholder="e.g. 53"></label><label>Waist (cm)<input name="waist" type="number" min="1" max="300" step="0.1" placeholder="Optional"></label></div><label>Notes<textarea name="notes" rows="2" placeholder="How are you feeling?"></textarea></label><button class="btn btn-primary" type="submit">Save measurement</button></form>
-          <div class="card form-card"><h2>Training consistency</h2><div class="big-number" id="progressWorkouts">0</div><p class="muted">workouts completed</p><div class="progress-track"><div id="consistencyBar" class="progress-fill" style="width:0%"></div></div><p class="small muted">This visual is based on your logged workouts, not a medical or performance assessment.</p></div>
+          <div class="card form-card"><h2>Training consistency</h2><div class="big-number" id="progressWorkouts">0</div><p class="muted">workouts completed</p><div class="progress-track"><div id="consistencyBar" class="progress-fill" style="width:0%"></div></div><p class="small muted">This visual is based on logged demo workouts, not a medical or performance assessment.</p></div>
         </div>
         <div class="section-heading"><h2>Measurement history</h2><button class="btn btn-secondary" id="clearMeasurements">Clear history</button></div>
         <div class="card table-card"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Weight</th><th>Waist</th><th>Notes</th></tr></thead><tbody id="measurementRows"><tr><td colspan="4" class="muted">No measurements recorded yet.</td></tr></tbody></table></div></div>
@@ -180,7 +180,7 @@
 
       <section class="page" id="page-social">
         <div class="page-intro"><p class="eyebrow">COMMUNITY</p><h1>Social Feed</h1><p class="subtext">Share training milestones and encourage your community. Keep private health information private.</p></div>
-        <form class="card form-card post-form" id="postForm"><label>Write a post<textarea name="text" rows="3" maxlength="1000" required placeholder="Share a workout milestone or a fitness tip…"></textarea></label><div class="post-form-bottom"><span class="small muted">Be respectful. No medical misinformation or unsafe challenge promotion.</span><button class="btn btn-primary" type="submit">Publish post</button></div></form>
+        <form class="card form-card post-form" id="postForm"><label>Write a post<textarea name="text" rows="3" maxlength="1000" required placeholder="Share a workout milestone or a fitness tip…"></textarea></label><div class="post-form-bottom"><span class="small muted">Be respectful. No medical misinformation or unsafe challenge promotion.</span><button class="btn btn-primary" type="submit">Publish demo post</button></div></form>
         <div class="feed" id="feedList"></div>
       </section>
 

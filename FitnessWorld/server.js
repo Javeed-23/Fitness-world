@@ -85,10 +85,39 @@ db.exec(`CREATE TABLE IF NOT EXISTS password_resets (
   expires_at TEXT NOT NULL
 );`);
 
+const userCount = db.prepare("SELECT COUNT(*) AS n FROM users").get().n;
+// Demo users share a known password: seed them only when explicitly requested (local development).
+if (userCount === 0 && process.env.SEED_DEMO_DATA === "true") {
+  const addUser = db.prepare("INSERT INTO users (name,email,password_hash,role) VALUES (?,?,?,?)");
+  const demoHash = bcrypt.hashSync("DemoPass123!", 10);
+  const ids = {};
+  for (const u of [
+    ["Arjun Fitness","arjun@example.com","member"],
+    ["Priya Wellness","priya@example.com","member"],
+    ["Rahul Runs","rahul@example.com","member"],
+    ["Meera Moves","meera@example.com","member"],
+    ["Vikram Lifts","vikram@example.com","gym_manager"]
+  ]) ids[u[1]] = Number(addUser.run(u[0],u[1],demoHash,u[2]).lastInsertRowid);
+  const addPost = db.prepare("INSERT INTO posts (user_id,body,is_demo) VALUES (?,?,1)");
+  [
+    ["arjun@example.com","Day 45 of my muscle-building journey! Consistency is everything. 💪"],
+    ["priya@example.com","Today's workout: legs and glutes. Never skip leg day! 🔥"],
+    ["rahul@example.com","Easy 5K run completed. Small steps add up. 🏃"],
+    ["meera@example.com","Fitness tip: keep a water bottle nearby and build hydration into your routine. 💧"],
+    ["vikram@example.com","Progress is built one good rep at a time. Train smart and recover well. 🏋️"]
+  ].forEach(([email,body])=>addPost.run(ids[email],body));
+  const addListing = db.prepare("INSERT INTO listings (seller_id,title,description,category,price_paise,stock) VALUES (?,?,?,?,?,?)");
+  addListing.run(ids["vikram@example.com"],"Resistance band set","Demo listing for home workouts.","Equipment",129900,20);
+  addListing.run(ids["arjun@example.com"],"Beginner strength plan","Four-week downloadable training plan demo.","Digital fitness product",49900,50);
+  addListing.run(ids["priya@example.com"],"Online form-check session","Demo coaching service; no real booking/payment.","Coaching & services",79900,10);
+}
+
 db.exec(`CREATE TABLE IF NOT EXISTS user_data (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, body TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 1, updated_at TEXT NOT NULL)`);
 const SQLiteStore = SQLiteStoreFactory(session);
 if (isProd && (process.env.SESSION_SECRET || "").length < 32) { console.error("Set SESSION_SECRET (32+ characters) before running in production."); process.exit(1); }
-if (process.env.TRUST_PROXY) app.set("trust proxy", Number(process.env.TRUST_PROXY) || 1);
+/* Render and most cloud hosts put one proxy in front of the app and end HTTPS there. Without trusting that proxy,
+   Express sees plain HTTP and never sends the Secure session cookie, so login appears to fail and returns to the login page. */
+app.set("trust proxy", process.env.TRUST_PROXY ? (Number(process.env.TRUST_PROXY) || 1) : (isProd ? 1 : false));
 app.disable("x-powered-by");
 app.use(helmet({ contentSecurityPolicy: { directives: { "default-src": ["'self'"], "style-src": ["'self'", "'unsafe-inline'"], "upgrade-insecure-requests": isProd ? [] : null } } }));
 const jsonSmall = express.json({ limit: "100kb" }), jsonAccount = express.json({ limit: "1mb" });
@@ -99,7 +128,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "local-development-only-change-me-before-deploying",
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: "lax", secure: isProd, maxAge: 1000 * 60 * 60 * 24 * 7 }
+  cookie: { httpOnly: true, sameSite: "lax", secure: isProd && process.env.COOKIE_SECURE !== "false", maxAge: 1000 * 60 * 60 * 24 * 7 }
 }));
 app.use("/api", (req, res, next) => {
   if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();

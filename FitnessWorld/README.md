@@ -29,7 +29,7 @@ The FitnessWorld app (workouts, recovery, video library, meal plan, progress, so
 - **No email verification.** After registering, the user goes straight to the dashboard.
 - **Sync is last-save-wins with a version check, not a merge.** Edits made offline are kept in the browser and sent when the connection returns. If another window or device saved first, the server’s newer copy wins and the unsent change is discarded, with a message saying so. Two windows editing the same data at the same moment will therefore lose one edit; a field-level merge would be the next step.
 - Social feed, gym groups and marketplace data are saved per account, as part of the account data. They are not shared between users yet. The starter’s `/api/posts`, `/api/groups` and `/api/marketplace` routes exist (login required) but the UI does not call them; a shared feed needs a product decision first.
-- No demo data: no demo users, sample posts, sample challenges or sample shop items. Sample items that older versions saved into an account are removed when the app loads.
+- Demo users are only created if `SEED_DEMO_DATA=true`.
 - Not production-ready: add HTTPS, a managed DB, email verification, and a payment gateway before real use.
 
 ## Changes to existing files
@@ -81,6 +81,29 @@ Dashboard: last-7-days chart and weekly workout goal. Workout: rest timer. Socia
 
 ## Removed in this version
 The Nutrition tab (food diary and daily goals) and the Water tab are gone from Workout, and the calorie/protein rows are gone from Progress. The section is called Workout. The stored data for these fields stays in the browser but is no longer shown.
+
+## Deploy on Render (GitHub → Render)
+1. Push the project to a GitHub repository. `.gitignore` keeps `.env`, `node_modules` and `data/` out of Git.
+2. In Render: New → Web Service → connect the repository.
+   - Runtime: Node (version 20 or newer; set `NODE_VERSION=20` if the build picks an older one)
+   - Build command: `npm install`
+   - Start command: `npm start`
+   - Health check path: `/api/health`
+3. Environment variables:
+   - `NODE_ENV` = `production`
+   - `SESSION_SECRET` = a random string of 32 or more characters (Render can generate one)
+   - `APP_URL` = `https://<your-service>.onrender.com` (used in password reset emails)
+   - `DATABASE_FILE` = `/var/data/fitnessworld.sqlite`
+   - Do not set `PORT`; Render sets it. Add `SMTP_*` only if you want password reset emails.
+4. Add a persistent disk mounted at `/var/data`. Without a disk, accounts and their data are erased on every deploy or restart.
+5. Changing `SESSION_SECRET` signs everyone out.
+
+### Login button returns to the login page
+This was caused by the app not trusting Render’s proxy, so the secure session cookie was never sent. Production now trusts one proxy hop by default, and a test covers it (`npm test`). If it still happens:
+- Open the site over `https://`, not `http://`.
+- Check that `NODE_ENV` is `production` and `SESSION_SECRET` is set (32+ characters).
+- Clear the site’s cookies once, then sign in again. The cookie is named `fw.sid`.
+- If you use more than one proxy in front of the app, set `TRUST_PROXY` to the number of proxies.
 
 ## Publishing the real full-stack app
 Needs a Node host (not a static page). On Render/Railway/Fly: build `npm install`, start `npm start`, set `NODE_ENV=production`, `SESSION_SECRET` (32+ chars), `APP_URL`, `TRUST_PROXY=1`, and `DATABASE_FILE` on a persistent disk (SQLite is lost on hosts without one). Add `SMTP_*` for password-reset email. Use HTTPS.
